@@ -14,6 +14,11 @@ export default async function handler(req, res) {
     return;
   }
 
+  if (!process.env.STEELENGINE_API_KEY) {
+    res.status(500).json({ error: 'Missing STEELENGINE_API_KEY on the server' });
+    return;
+  }
+
   const url = `https://steelengine.com/${Array.isArray(path) ? path.join('/') : path}`;
 
   try {
@@ -21,12 +26,13 @@ export default async function handler(req, res) {
       method: req.method,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk-steelengine-Xch2fO7RQGcQ0KRGMl5Ksvy4jjqMXd6B',
+        'X-API-Key': process.env.STEELENGINE_API_KEY || '',
       },
       body: req.method !== 'GET' ? JSON.stringify(req.body) : undefined,
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
     res.status(response.status).json(data);
   } catch (e) {
     res.status(500).json({ error: 'Proxy error: ' + e.message });
