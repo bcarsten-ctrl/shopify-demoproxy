@@ -297,15 +297,16 @@ function fmt(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('e
 function money(v) { return '$' + parseFloat(v||0).toFixed(2); }
 function showErr(msg) { const e = document.getElementById('p1err'); e.textContent = msg; e.style.display = 'block'; }
 function clearErr() { document.getElementById('p1err').style.display = 'none'; }
+function unwrapWorkflow(raw) {
+  return raw?.output?.data ?? raw?.output?.output?.data ?? raw?.data ?? raw;
+}
 
 async function doSearch() {
   const name = document.getElementById('nameInput').value.trim();
   if (!name) { document.getElementById('nameInput').focus(); return; }
   clearErr();
- function unwrapWorkflow(raw) {
-  return raw?.output?.data ?? raw?.output?.output?.data ?? raw?.data ?? raw;
-}
   const btn = document.getElementById('searchBtn');
+
   btn.disabled = true;
   btn.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.75s linear infinite;flex-shrink:0"></div> Searching…';
 
