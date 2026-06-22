@@ -280,9 +280,8 @@
 </div>
 
 <script>
-const BASE  = 'https://shopify-demoproxy.vercel.app/api/proxy';
+const BASE  = '/api/proxy';
 const WF_ID = '9a39d484-b23e-49a2-9c69-a8907b51aad8';
-const KEY   = 'sk-steelengine-Xch2fO7RQGcQ0KRGMl5Ksvy4jjqMXd6B';
 const HDRS  = { 'Content-Type': 'application/json' };
 
 let S = { resumeUrl: null, executionId: null, candidates: [], selectedId: null };
@@ -303,6 +302,9 @@ async function doSearch() {
   const name = document.getElementById('nameInput').value.trim();
   if (!name) { document.getElementById('nameInput').focus(); return; }
   clearErr();
+ function unwrapWorkflow(raw) {
+  return raw?.output?.data ?? raw?.output?.output?.data ?? raw?.data ?? raw;
+}
   const btn = document.getElementById('searchBtn');
   btn.disabled = true;
   btn.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.75s linear infinite;flex-shrink:0"></div> Searching…';
@@ -313,7 +315,7 @@ async function doSearch() {
 
     if (!res.ok) { showErr(raw?.message || raw?.error || `Error ${res.status} — please try again.`); return; }
 
-    const data = raw?.data ?? raw;
+    const data = unwrapWorkflow(raw);
 
     // Not found — CustomerExists else branch fired
     if (data?.found === false || ['no_match','insufficient_input','none'].includes(data?.status)) {
@@ -324,7 +326,7 @@ async function doSearch() {
 
     // Paused at SelectCustomer HITL block
     if (data?._resume?.apiUrl) {
-      S.resumeUrl   = '/api/proxy/' + data._resume.apiUrl.replace('https://steelengine.com/', '');
+     S.resumeUrl = BASE + '/' + data._resume.apiUrl.replace('https://steelengine.com/', '');
       S.executionId = data._resume.executionId;
       const field   = (data.inputFormat || []).find(f => f.name === 'matching_customers');
       S.candidates  = parseCandidates(field?.value || '');
@@ -399,7 +401,11 @@ async function doConfirm() {
     const res = await fetch(S.resumeUrl, { method:'POST', headers:HDRS, body:JSON.stringify({ selected_customer_id: S.selectedId }) });
     const raw = await res.json();
     if (!res.ok) { goTo('p1'); showErr(raw?.message || `Resume error ${res.status}`); return; }
-
+   const resumed = unwrapWorkflow(raw);
+if (resumed?.found === true || resumed?.customer) {
+  renderSummary(resumed);
+  return;
+}
     const result = await poll(S.executionId, 0);
     if (result) renderSummary(result);
     else { goTo('p1'); showErr('Timed out waiting for results. Please try again.'); }
@@ -412,9 +418,9 @@ async function poll(execId, n) {
   if (n > 40) return null;
   await new Promise(r => setTimeout(r, 2500));
   try {
-    const res = await fetch(`${BASE}/api/workflows/${WF_ID}/executions/${execId}`, { headers: HDRS });
+    const res = await fetch(`${BASE}/api/jobs/${execId}`, { headers: HDRS });
     const raw = await res.json();
-    const d   = raw?.data ?? raw;
+    const d = unwrapWorkflow(raw);
     const st  = d?.status || d?.execution?.status;
     if (st === 'completed' || st === 'success') return d?.output ?? d?.execution?.output ?? d?.result ?? d;
     if (st === 'failed' || st === 'error') return null;
