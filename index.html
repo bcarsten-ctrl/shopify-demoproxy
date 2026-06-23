@@ -315,7 +315,6 @@ async function doSearch() {
 
   btn.disabled = true;
   btn.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.75s linear infinite;flex-shrink:0"></div> Searching…';
-  startLoading(name);
 
   try {
     const res  = await fetch(`${BASE}/api/workflows/${WF_ID}/execute`, { method:'POST', headers:HDRS, body:JSON.stringify({ name }) });
