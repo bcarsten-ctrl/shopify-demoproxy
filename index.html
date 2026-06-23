@@ -147,6 +147,7 @@
   .badge.amber { background: var(--warn-bg); color: var(--warn-text); }
 
   .s-body { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .summary-columns { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
 
   .end-card { border: 1px solid var(--border2); border-radius: var(--radius-lg); background: var(--bg); overflow: hidden; box-shadow: var(--shadow); }
   .end-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
@@ -208,6 +209,7 @@
 
   @media (max-width: 480px) {
     .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .summary-columns { grid-template-columns: 1fr; }
     .end-row { grid-template-columns: 1fr; }
     .end-cell + .end-cell { border-left: none; border-top: 1px solid var(--border); }
     .end-value { font-size: 18px; }
@@ -476,43 +478,37 @@ function renderSummary(d) {
   const sq         = d.suggestedQuestions || [];
   const recs       = d.productRecommendations || [];
 
-  document.getElementById('sHeader').innerHTML = '';
-  document.getElementById('sHeader').style.display = 'none';
+  document.getElementById('sHeader').style.display = 'flex';
+  document.getElementById('sHeader').innerHTML = `
+    <div class="s-avatar">${initials(c.name)}</div>
+    <div>
+      <div class="s-name">${c.name || '—'}</div>
+      <div class="s-meta">${c.email || '—'} · ${c.phone || '—'}</div>
+      <div class="s-badges">
+        <span class="badge green"><i class="ti ti-circle-check" style="font-size:10px"></i> Found</span>
+        ${complaints.length ? `<span class="badge red"><i class="ti ti-alert-triangle" style="font-size:10px"></i> Open complaint</span>` : ''}
+        ${services.length   ? `<span class="badge amber"><i class="ti ti-shield" style="font-size:10px"></i> ${services.length} active service</span>` : ''}
+      </div>
+    </div>`;
 
   document.getElementById('auditId').textContent = 'Lookup recorded · lk_' + Math.random().toString(36).slice(2,12);
 
   document.getElementById('sBody').innerHTML = `
-    <div class="end-card">
-      <div class="end-row">
-        <div class="end-cell">
-          <div class="end-label">Name</div>
-          <div class="end-value">${c.name || '—'}</div>
-          <div class="end-sub">${c.email || '—'} · ${c.phone || '—'}</div>
-        </div>
-        <div class="end-cell">
-          <div class="end-label">Orders / spend</div>
-          <div class="end-value">${c.orders_count ?? 0} orders</div>
-          <div class="end-sub">${money(c.total_spent)} lifetime spend</div>
-        </div>
-      </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-lbl">Lifetime orders</div><div class="stat-val">${c.orders_count ?? 0}</div></div>
+      <div class="stat"><div class="stat-lbl">Lifetime spend</div><div class="stat-val">${money(c.total_spent)}</div></div>
+      <div class="stat"><div class="stat-lbl">Complaints</div><div class="stat-val" style="color:${complaints.length ? 'var(--err-text)' : 'inherit'}">${complaints.length}</div></div>
+      <div class="stat"><div class="stat-lbl">Services</div><div class="stat-val">${services.length}</div></div>
+    </div>
 
-      <div class="end-row end-sales">
-        <div class="end-cell">
-          <div class="end-label">Sales angle</div>
-          <div class="end-value">${d.salesAngle || 'No sales angle returned.'}</div>
-        </div>
-      </div>
+    <div class="ai-block"><div class="ai-lbl"><i class="ti ti-sparkles"></i> Sales angle · Sandler method</div><div class="ai-text">"${d.salesAngle || 'No sales angle returned.'}"</div></div>
 
-      <div class="end-row">
-        <div class="end-cell">
-          <div class="end-label">Questions</div>
-          ${sq.length ? `<ol class="end-list">${sq.map((q,i) => `<li><span class="end-list-num">${i+1}</span><span>${q}</span></li>`).join('')}</ol>` : '<div class="end-sub">No suggested questions returned.</div>'}
-        </div>
-        <div class="end-cell">
-          <div class="end-label">Products</div>
-          ${recs.length ? recs.map(r => `<div class="end-product"><i class="ti ti-shopping-bag"></i><div><div class="end-product-title">${r.title || 'Product'}</div><div class="end-product-rat">${r.rationale || ''}</div></div></div>`).join('') : '<div class="end-sub">No product recommendations returned.</div>'}
-        </div>
-      </div>
+    <div class="summary-columns">
+      <div class="section"><div class="sec-head"><i class="ti ti-message-circle"></i> Suggested questions</div>
+        ${sq.length ? `<ul class="q-list">${sq.map((q,i) => `<li class="q-item"><span class="q-num">${i+1}</span><span>${q}</span></li>`).join('')}</ul>` : '<div class="sec-body"><div class="row"><div class="row-left">No suggested questions returned.</div></div></div>'}</div>
+
+      <div class="section"><div class="sec-head"><i class="ti ti-shopping-bag"></i> Product recommendations</div>
+        <div class="sec-body">${recs.length ? recs.map(r => `<div class="rec-row"><div class="rec-icon"><i class="ti ti-tag"></i></div><div><div class="rec-title">${r.title || 'Product'}</div><div class="rec-rat">${r.rationale || ''}</div></div></div>`).join('') : '<div class="row"><div class="row-left">No product recommendations returned.</div></div>'}</div></div>
     </div>
 
     ${orders.length ? `<div class="section"><div class="sec-head"><i class="ti ti-package"></i> Order history · ${orders.length} orders · ${money(d.orderTotal)} total</div>
