@@ -110,10 +110,10 @@
   .c-card:hover { border-color: var(--border2); }
   .c-card.selected { border: 1.5px solid var(--accent); }
   .c-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--info-bg); display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px; color: var(--info-text); flex-shrink: 0; }
-.c-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-.c-phone { display: inline-flex; align-items: center; gap: 5px; font-size: 17px; font-weight: 650; color: var(--text); letter-spacing: 0; line-height: 1.25; }
-.c-phone i { color: var(--accent); font-size: 16px; flex-shrink: 0; }
-.c-phone.missing { color: var(--text2); font-size: 14px; font-weight: 500; }
+  .c-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .c-phone { display: inline-flex; align-items: center; gap: 5px; font-size: 17px; font-weight: 650; color: var(--text); letter-spacing: 0; line-height: 1.25; }
+  .c-phone i { color: var(--accent); font-size: 16px; flex-shrink: 0; }
+  .c-phone.missing { color: var(--text2); font-size: 14px; font-weight: 500; }
   .c-orders { text-align: right; flex-shrink: 0; }
   .c-orders-num { font-size: 16px; font-weight: 500; }
   .c-orders-lbl { font-size: 11px; color: var(--text2); }
@@ -147,6 +147,25 @@
   .badge.amber { background: var(--warn-bg); color: var(--warn-text); }
 
   .s-body { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+  .end-card { border: 1px solid var(--border2); border-radius: var(--radius-lg); background: var(--bg); overflow: hidden; box-shadow: var(--shadow); }
+  .end-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
+  .end-row:last-child { border-bottom: none; }
+  .end-cell { min-width: 0; padding: 17px 18px; }
+  .end-cell + .end-cell { border-left: 1px solid var(--border); }
+  .end-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 7px; }
+  .end-value { font-size: 20px; font-weight: 650; color: var(--text); line-height: 1.25; overflow-wrap: anywhere; }
+  .end-sub { font-size: 12px; color: var(--text2); line-height: 1.45; margin-top: 4px; overflow-wrap: anywhere; }
+  .end-sales { display: block; }
+  .end-sales .end-value { font-size: 16px; font-weight: 500; line-height: 1.6; }
+  .end-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .end-list li { display: flex; gap: 8px; font-size: 13px; line-height: 1.45; color: var(--text); }
+  .end-list-num { color: var(--accent); font-size: 11px; font-weight: 650; padding-top: 2px; flex-shrink: 0; }
+  .end-product { display: flex; gap: 9px; font-size: 13px; line-height: 1.45; }
+  .end-product + .end-product { padding-top: 10px; border-top: 0.5px solid var(--border); }
+  .end-product i { color: var(--accent); font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .end-product-title { font-weight: 600; }
+  .end-product-rat { color: var(--text2); margin-top: 2px; }
 
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
   .stat { background: var(--bg2); border-radius: var(--radius); padding: 11px 13px; }
@@ -189,6 +208,9 @@
 
   @media (max-width: 480px) {
     .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .end-row { grid-template-columns: 1fr; }
+    .end-cell + .end-cell { border-left: none; border-top: 1px solid var(--border); }
+    .end-value { font-size: 18px; }
     .app { border: none; }
   }
 </style>
@@ -329,7 +351,7 @@ async function doSearch() {
 
     // Paused at SelectCustomer HITL block
     if (data?._resume?.apiUrl) {
-     S.resumeUrl = BASE + '/' + data._resume.apiUrl.replace('https://steelengine.com/', '');
+      S.resumeUrl   = BASE + '/' + data._resume.apiUrl.replace('https://steelengine.com/', '');
       S.executionId = data._resume.executionId;
       const field   = (data.inputFormat || []).find(f => f.name === 'matching_customers');
       S.candidates  = parseCandidates(field?.value || '');
@@ -404,11 +426,13 @@ async function doConfirm() {
     const res = await fetch(S.resumeUrl, { method:'POST', headers:HDRS, body:JSON.stringify({ selected_customer_id: S.selectedId }) });
     const raw = await res.json();
     if (!res.ok) { goTo('p1'); showErr(raw?.message || `Resume error ${res.status}`); return; }
-   const resumed = unwrapWorkflow(raw);
-if (resumed?.found === true || resumed?.customer) {
-  renderSummary(resumed);
-  return;
-}
+
+    const resumed = unwrapWorkflow(raw);
+    if (resumed?.found === true || resumed?.customer) {
+      renderSummary(resumed);
+      return;
+    }
+
     const result = await poll(S.executionId, 0);
     if (result) renderSummary(result);
     else { goTo('p1'); showErr('Timed out waiting for results. Please try again.'); }
@@ -423,7 +447,7 @@ async function poll(execId, n) {
   try {
     const res = await fetch(`${BASE}/api/jobs/${execId}`, { headers: HDRS });
     const raw = await res.json();
-    const d = unwrapWorkflow(raw);
+    const d   = unwrapWorkflow(raw);
     const st  = d?.status || d?.execution?.status;
     if (st === 'completed' || st === 'success') return d?.output ?? d?.execution?.output ?? d?.result ?? d;
     if (st === 'failed' || st === 'error') return null;
@@ -452,35 +476,44 @@ function renderSummary(d) {
   const sq         = d.suggestedQuestions || [];
   const recs       = d.productRecommendations || [];
 
-  document.getElementById('sHeader').innerHTML = `
-    <div class="s-avatar">${initials(c.name)}</div>
-    <div>
-      <div class="s-name">${c.name || '—'}</div>
-      <div class="s-meta">${c.email || '—'} · ${c.phone || '—'}</div>
-      <div class="s-badges">
-        <span class="badge green"><i class="ti ti-circle-check" style="font-size:10px"></i> Found</span>
-        ${complaints.length ? `<span class="badge red"><i class="ti ti-alert-triangle" style="font-size:10px"></i> Open complaint</span>` : ''}
-        ${services.length   ? `<span class="badge amber"><i class="ti ti-shield" style="font-size:10px"></i> ${services.length} active service</span>` : ''}
-      </div>
-    </div>`;
+  document.getElementById('sHeader').innerHTML = '';
+  document.getElementById('sHeader').style.display = 'none';
 
   document.getElementById('auditId').textContent = 'Lookup recorded · lk_' + Math.random().toString(36).slice(2,12);
 
   document.getElementById('sBody').innerHTML = `
-    <div class="stats">
-      <div class="stat"><div class="stat-lbl">Lifetime orders</div><div class="stat-val">${c.orders_count ?? 0}</div></div>
-      <div class="stat"><div class="stat-lbl">Lifetime spend</div><div class="stat-val">${money(c.total_spent)}</div></div>
-      <div class="stat"><div class="stat-lbl">Complaints</div><div class="stat-val" style="color:${complaints.length ? 'var(--err-text)' : 'inherit'}">${complaints.length}</div></div>
-      <div class="stat"><div class="stat-lbl">Services</div><div class="stat-val">${services.length}</div></div>
+    <div class="end-card">
+      <div class="end-row">
+        <div class="end-cell">
+          <div class="end-label">Name</div>
+          <div class="end-value">${c.name || '—'}</div>
+          <div class="end-sub">${c.email || '—'} · ${c.phone || '—'}</div>
+        </div>
+        <div class="end-cell">
+          <div class="end-label">Orders / spend</div>
+          <div class="end-value">${c.orders_count ?? 0} orders</div>
+          <div class="end-sub">${money(c.total_spent)} lifetime spend</div>
+        </div>
+      </div>
+
+      <div class="end-row end-sales">
+        <div class="end-cell">
+          <div class="end-label">Sales angle</div>
+          <div class="end-value">${d.salesAngle || 'No sales angle returned.'}</div>
+        </div>
+      </div>
+
+      <div class="end-row">
+        <div class="end-cell">
+          <div class="end-label">Questions</div>
+          ${sq.length ? `<ol class="end-list">${sq.map((q,i) => `<li><span class="end-list-num">${i+1}</span><span>${q}</span></li>`).join('')}</ol>` : '<div class="end-sub">No suggested questions returned.</div>'}
+        </div>
+        <div class="end-cell">
+          <div class="end-label">Products</div>
+          ${recs.length ? recs.map(r => `<div class="end-product"><i class="ti ti-shopping-bag"></i><div><div class="end-product-title">${r.title || 'Product'}</div><div class="end-product-rat">${r.rationale || ''}</div></div></div>`).join('') : '<div class="end-sub">No product recommendations returned.</div>'}
+        </div>
+      </div>
     </div>
-
-    ${d.salesAngle ? `<div class="ai-block"><div class="ai-lbl"><i class="ti ti-sparkles"></i> Sales angle · Sandler method</div><div class="ai-text">"${d.salesAngle}"</div></div>` : ''}
-
-    ${sq.length ? `<div class="section"><div class="sec-head"><i class="ti ti-message-circle"></i> Suggested questions</div>
-      <ul class="q-list">${sq.map((q,i) => `<li class="q-item"><span class="q-num">${i+1}</span><span>${q}</span></li>`).join('')}</ul></div>` : ''}
-
-    ${recs.length ? `<div class="section"><div class="sec-head"><i class="ti ti-shopping-bag"></i> Product recommendations</div>
-      <div class="sec-body">${recs.map(r => `<div class="rec-row"><div class="rec-icon"><i class="ti ti-tag"></i></div><div><div class="rec-title">${r.title}</div><div class="rec-rat">${r.rationale}</div></div></div>`).join('')}</div></div>` : ''}
 
     ${orders.length ? `<div class="section"><div class="sec-head"><i class="ti ti-package"></i> Order history · ${orders.length} orders · ${money(d.orderTotal)} total</div>
       <div class="sec-body">${orders.map(o => `<div class="row">
