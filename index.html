@@ -315,12 +315,13 @@ async function doSearch() {
 
   btn.disabled = true;
   btn.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.75s linear infinite;flex-shrink:0"></div> Searching…';
+  startLoading(name);
 
   try {
     const res  = await fetch(`${BASE}/api/workflows/${WF_ID}/execute`, { method:'POST', headers:HDRS, body:JSON.stringify({ name }) });
     const raw  = await res.json();
 
-    if (!res.ok) { showErr(raw?.message || raw?.error || `Error ${res.status} — please try again.`); return; }
+    if (!res.ok) { goTo('p1'); showErr(raw?.message || raw?.error || `Error ${res.status} — please try again.`); return; }
 
     const data = unwrapWorkflow(raw);
 
@@ -344,13 +345,14 @@ async function doSearch() {
 
     // Completed immediately (single match, no HITL needed)
     if (data?.found === true && data?.customer) {
-      startLoading(data.customer?.name || name);
-      setTimeout(() => renderSummary(data), 3200);
+      renderSummary(data);
       return;
     }
 
+    goTo('p1');
     showErr('Unexpected response from the workflow. Please try again.');
   } catch (e) {
+    goTo('p1');
     showErr('Network error — could not reach the API: ' + e.message);
   } finally {
     btn.disabled = false;
@@ -425,7 +427,7 @@ async function doConfirm() {
 
 async function poll(execId, n) {
   if (n > 40) return null;
-  await new Promise(r => setTimeout(r, 2500));
+  if (n > 0) await new Promise(r => setTimeout(r, 500));
   try {
     const res = await fetch(`${BASE}/api/jobs/${execId}`, { headers: HDRS });
     const raw = await res.json();
