@@ -149,25 +149,6 @@
   .s-body { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
   .summary-columns { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
 
-  .end-card { border: 1px solid var(--border2); border-radius: var(--radius-lg); background: var(--bg); overflow: hidden; box-shadow: var(--shadow); }
-  .end-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
-  .end-row:last-child { border-bottom: none; }
-  .end-cell { min-width: 0; padding: 17px 18px; }
-  .end-cell + .end-cell { border-left: 1px solid var(--border); }
-  .end-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 7px; }
-  .end-value { font-size: 20px; font-weight: 650; color: var(--text); line-height: 1.25; overflow-wrap: anywhere; }
-  .end-sub { font-size: 12px; color: var(--text2); line-height: 1.45; margin-top: 4px; overflow-wrap: anywhere; }
-  .end-sales { display: block; }
-  .end-sales .end-value { font-size: 16px; font-weight: 500; line-height: 1.6; }
-  .end-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .end-list li { display: flex; gap: 8px; font-size: 13px; line-height: 1.45; color: var(--text); }
-  .end-list-num { color: var(--accent); font-size: 11px; font-weight: 650; padding-top: 2px; flex-shrink: 0; }
-  .end-product { display: flex; gap: 9px; font-size: 13px; line-height: 1.45; }
-  .end-product + .end-product { padding-top: 10px; border-top: 0.5px solid var(--border); }
-  .end-product i { color: var(--accent); font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-  .end-product-title { font-weight: 600; }
-  .end-product-rat { color: var(--text2); margin-top: 2px; }
-
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
   .stat { background: var(--bg2); border-radius: var(--radius); padding: 11px 13px; }
   .stat-lbl { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
@@ -210,9 +191,6 @@
   @media (max-width: 480px) {
     .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
     .summary-columns { grid-template-columns: 1fr; }
-    .end-row { grid-template-columns: 1fr; }
-    .end-cell + .end-cell { border-left: none; border-top: 1px solid var(--border); }
-    .end-value { font-size: 18px; }
     .app { border: none; }
   }
 </style>
