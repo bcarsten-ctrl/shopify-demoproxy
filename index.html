@@ -291,6 +291,7 @@ const WF_ID = '9a39d484-b23e-49a2-9c69-a8907b51aad8';
 const HDRS  = { 'Content-Type': 'application/json' };
 
 let S = { resumeUrl: null, executionId: null, candidates: [], selectedId: null };
+let warmSearchPathPromise = null;
 
 function goTo(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -306,6 +307,17 @@ function clearErr() { document.getElementById('p1err').style.display = 'none'; }
 function unwrapWorkflow(raw) {
   return raw?.output?.data ?? raw?.output?.output?.data ?? raw?.data ?? raw;
 }
+
+function prewarmSearchPath() {
+  if (!warmSearchPathPromise) {
+    warmSearchPathPromise = fetch(`${BASE}/api/workflows/${WF_ID}`, { headers: HDRS, cache: 'no-store' }).catch(() => null);
+  }
+  return warmSearchPathPromise;
+}
+
+prewarmSearchPath();
+document.getElementById('nameInput')?.addEventListener('focus', prewarmSearchPath, { once: true });
+document.getElementById('nameInput')?.addEventListener('input', prewarmSearchPath, { once: true });
 
 async function doSearch() {
   const name = document.getElementById('nameInput').value.trim();
