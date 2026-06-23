@@ -135,10 +135,11 @@
   .lstep i { font-size: 15px; width: 16px; flex-shrink: 0; }
 
   .summary-wrap { flex: 1; display: flex; flex-direction: column; }
-  .s-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 14px; }
+  .s-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+  .s-profile { min-width: 0; display: flex; align-items: center; gap: 14px; }
   .s-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--info-bg); display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 15px; color: var(--info-text); flex-shrink: 0; }
   .s-name { font-size: 18px; font-weight: 500; }
-  .s-meta { font-size: 12px; color: var(--text2); margin-top: 3px; }
+  .s-meta { font-size: 12px; color: var(--text2); margin-top: 3px; overflow-wrap: anywhere; }
   .s-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
 
   .badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; padding: 3px 9px; border-radius: 20px; }
@@ -149,10 +150,10 @@
   .s-body { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
   .summary-columns { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
 
-  .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
-  .stat { background: var(--bg2); border-radius: var(--radius); padding: 11px 13px; }
-  .stat-lbl { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
-  .stat-val { font-size: 20px; font-weight: 500; }
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(82px,1fr)); gap: 6px; width: min(100%, 256px); flex-shrink: 0; }
+  .stat { background: var(--bg2); border-radius: var(--radius); padding: 8px 10px; min-height: 54px; }
+  .stat-lbl { font-size: 10px; color: var(--text2); margin-bottom: 3px; white-space: nowrap; }
+  .stat-val { font-size: 17px; font-weight: 500; line-height: 1.2; }
 
   .section { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
   .sec-head { padding: 10px 16px; border-bottom: 0.5px solid var(--border); font-size: 12px; font-weight: 500; color: var(--text2); display: flex; align-items: center; gap: 7px; }
@@ -189,7 +190,8 @@
   .audit { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); }
 
   @media (max-width: 480px) {
-    .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .s-header { align-items: flex-start; flex-direction: column; }
+    .stats { grid-template-columns: repeat(2, minmax(0,1fr)); width: 100%; }
     .summary-columns { grid-template-columns: 1fr; }
     .app { border: none; }
   }
@@ -458,27 +460,28 @@ function renderSummary(d) {
 
   document.getElementById('sHeader').style.display = 'flex';
   document.getElementById('sHeader').innerHTML = `
-    <div class="s-avatar">${initials(c.name)}</div>
-    <div>
-      <div class="s-name">${c.name || '—'}</div>
-      <div class="s-meta">${c.email || '—'} · ${c.phone || '—'}</div>
-      <div class="s-badges">
-        <span class="badge green"><i class="ti ti-circle-check" style="font-size:10px"></i> Found</span>
-        ${complaints.length ? `<span class="badge red"><i class="ti ti-alert-triangle" style="font-size:10px"></i> Open complaint</span>` : ''}
-        ${services.length   ? `<span class="badge amber"><i class="ti ti-shield" style="font-size:10px"></i> ${services.length} active service</span>` : ''}
+    <div class="s-profile">
+      <div class="s-avatar">${initials(c.name)}</div>
+      <div>
+        <div class="s-name">${c.name || '—'}</div>
+        <div class="s-meta">${c.email || '—'} · ${c.phone || '—'}</div>
+        <div class="s-badges">
+          <span class="badge green"><i class="ti ti-circle-check" style="font-size:10px"></i> Found</span>
+          ${complaints.length ? `<span class="badge red"><i class="ti ti-alert-triangle" style="font-size:10px"></i> Open complaint</span>` : ''}
+          ${services.length   ? `<span class="badge amber"><i class="ti ti-shield" style="font-size:10px"></i> ${services.length} active service</span>` : ''}
+        </div>
       </div>
-    </div>`;
-
-  document.getElementById('auditId').textContent = 'Lookup recorded · lk_' + Math.random().toString(36).slice(2,12);
-
-  document.getElementById('sBody').innerHTML = `
+    </div>
     <div class="stats">
       <div class="stat"><div class="stat-lbl">Lifetime orders</div><div class="stat-val">${c.orders_count ?? 0}</div></div>
       <div class="stat"><div class="stat-lbl">Lifetime spend</div><div class="stat-val">${money(c.total_spent)}</div></div>
       <div class="stat"><div class="stat-lbl">Complaints</div><div class="stat-val" style="color:${complaints.length ? 'var(--err-text)' : 'inherit'}">${complaints.length}</div></div>
       <div class="stat"><div class="stat-lbl">Services</div><div class="stat-val">${services.length}</div></div>
-    </div>
+    </div>`;
 
+  document.getElementById('auditId').textContent = 'Lookup recorded · lk_' + Math.random().toString(36).slice(2,12);
+
+  document.getElementById('sBody').innerHTML = `
     <div class="ai-block"><div class="ai-lbl"><i class="ti ti-sparkles"></i> Sales angle · Sandler method</div><div class="ai-text">"${d.salesAngle || 'No sales angle returned.'}"</div></div>
 
     <div class="summary-columns">
