@@ -3,147 +3,136 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Customer Cockpit</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+<title>PeakActivity Customer Cockpit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,500,0,0&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #ffffff;
-    --bg2:       #f5f5f4;
-    --bg3:       #efefed;
-    --text:      #1a1a18;
-    --text2:     #6b6b67;
-    --text3:     #9e9e9a;
-    --border:    rgba(0,0,0,0.10);
-    --border2:   rgba(0,0,0,0.18);
-    --accent:    #dc3535;
-    --accent-hv: #b92b2b;
-    --info-bg:   #e6f1fb;
-    --info-text: #0c447c;
-    --info-bdr:  rgba(55,138,221,0.3);
-    --ok-bg:     #eaf3de;
-    --ok-text:   #3b6d11;
-    --ok-bdr:    rgba(99,153,34,0.3);
-    --warn-bg:   #faeeda;
-    --warn-text: #854f0b;
-    --warn-bdr:  rgba(186,117,23,0.3);
-    --err-bg:    #fcebeb;
-    --err-text:  #a32d2d;
-    --err-bdr:   rgba(226,75,74,0.3);
+    --ink:       #0c121f;
+    --prussian:  #12192b;
+    --magenta:   #d51c57;
+    --magenta-hv:#b91548;
+    --magenta-dn:#8f1038;
+    --white:     #ffffff;
+    --bg:        var(--ink);
+    --bg2:       var(--prussian);
+    --bg3:       #19233a;
+    --text:      var(--white);
+    --text2:     rgba(255,255,255,0.72);
+    --text3:     rgba(255,255,255,0.48);
+    --border:    rgba(255,255,255,0.10);
+    --border2:   rgba(255,255,255,0.20);
+    --accent:    var(--magenta);
+    --accent-hv: var(--magenta-hv);
+    --info-bg:   rgba(255,255,255,0.06);
+    --info-text: rgba(255,255,255,0.88);
+    --info-bdr:  rgba(255,255,255,0.14);
+    --ok-bg:     rgba(255,255,255,0.08);
+    --ok-text:   #ffffff;
+    --ok-bdr:    rgba(255,255,255,0.16);
+    --warn-bg:   rgba(213,28,87,0.13);
+    --warn-text: #f6b4ca;
+    --warn-bdr:  rgba(213,28,87,0.34);
+    --err-bg:    rgba(213,28,87,0.16);
+    --err-text:  #ffbdd2;
+    --err-bdr:   rgba(213,28,87,0.42);
     --radius:    8px;
-    --radius-lg: 12px;
-    --shadow:    0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --radius-lg: 8px;
+    --pill:      999px;
+    --shadow:    0 18px 52px rgba(0,0,0,0.28);
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg:        #1c1c1a;
-      --bg2:       #252523;
-      --bg3:       #2e2e2b;
-      --text:      #f0ede8;
-      --text2:     #a0a09a;
-      --text3:     #686864;
-      --border:    rgba(255,255,255,0.10);
-      --border2:   rgba(255,255,255,0.18);
-      --info-bg:   #0c447c;
-      --info-text: #b5d4f4;
-      --info-bdr:  rgba(55,138,221,0.3);
-      --ok-bg:     #27500a;
-      --ok-text:   #c0dd97;
-      --ok-bdr:    rgba(99,153,34,0.3);
-      --warn-bg:   #633806;
-      --warn-text: #fac775;
-      --warn-bdr:  rgba(186,117,23,0.3);
-      --err-bg:    #791f1f;
-      --err-text:  #f7c1c1;
-      --err-bdr:   rgba(226,75,74,0.3);
-    }
-  }
+  body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); min-height: 100vh; }
 
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); min-height: 100vh; }
-
-  .app { max-width: 720px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; border-left: 0.5px solid var(--border); border-right: 0.5px solid var(--border); }
+  .app { max-width: 760px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; border-left: 0.5px solid var(--border); border-right: 0.5px solid var(--border); background: var(--bg); box-shadow: var(--shadow); }
 
   .page { display: none; flex-direction: column; flex: 1; }
   .page.active { display: flex; }
 
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
-  .topbar-brand { display: flex; align-items: center; gap: 8px; }
-  .brand-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-  .topbar-title { font-size: 14px; font-weight: 500; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: rgba(12,18,31,0.94); backdrop-filter: blur(18px); z-index: 10; }
+  .topbar-brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .pa-wordmark { font-size: 15px; font-weight: 700; letter-spacing: 0; line-height: 1; white-space: nowrap; }
+  .pa-wordmark .mark-a { color: var(--accent); }
+  .topbar-title { font-size: 12px; font-weight: 600; color: var(--text2); border-left: 0.5px solid var(--border2); padding-left: 13px; white-space: nowrap; }
   .step-pills { display: flex; gap: 6px; }
-  .step-pill { width: 24px; height: 4px; border-radius: 2px; background: var(--border2); }
+  .step-pill { width: 24px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.18); }
   .step-pill.done { background: var(--accent); }
-  .step-pill.active { background: var(--accent); opacity: 0.45; }
+  .step-pill.active { background: var(--accent); opacity: 0.62; }
 
   .center-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; }
-  .page-icon { font-size: 40px; color: var(--text3); margin-bottom: 16px; }
-  .page-heading { font-size: 22px; font-weight: 500; margin-bottom: 8px; text-align: center; }
+  .material-symbols-rounded { font-family: 'Material Symbols Rounded'; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: 0; text-transform: none; display: inline-flex; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24; flex-shrink: 0; }
+  .page-icon { font-size: 44px; color: var(--text2); margin-bottom: 18px; }
+  .page-heading { font-size: 26px; font-weight: 700; margin-bottom: 8px; text-align: center; }
   .page-sub { font-size: 13px; color: var(--text2); text-align: center; max-width: 320px; line-height: 1.6; margin-bottom: 28px; }
 
   .input-wrap { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 400px; }
-  input[type="text"] { width: 100%; height: 44px; border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 0 14px; font-size: 15px; font-family: inherit; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-  input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(220,53,53,0.12); }
+  input[type="text"] { width: 100%; height: 48px; border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 0 15px; font-size: 15px; font-family: inherit; background: rgba(255,255,255,0.05); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s, background 0.15s; }
+  input[type="text"]::placeholder { color: var(--text3); }
+  input[type="text"]:focus { border-color: var(--accent); background: rgba(255,255,255,0.08); box-shadow: 0 0 0 3px rgba(213,28,87,0.22); }
 
-  .btn { height: 44px; padding: 0 22px; border: 0.5px solid var(--border2); border-radius: var(--radius); font-size: 14px; font-family: inherit; background: var(--bg); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 7px; transition: background 0.12s; }
-  .btn:hover { background: var(--bg2); }
-  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn { height: 46px; padding: 0 22px; border: 0.5px solid var(--border2); border-radius: var(--pill); font-size: 14px; font-weight: 600; font-family: inherit; background: rgba(255,255,255,0.05); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.12s, border-color 0.12s, color 0.12s, box-shadow 0.12s; }
+  .btn:hover { background: var(--bg3); }
+  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(213,28,87,0.28); }
+  .btn:disabled { opacity: 0.42; cursor: not-allowed; }
   .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); width: 100%; }
   .btn.primary:hover:not(:disabled) { background: var(--accent-hv); }
-  .btn.ghost { border-color: transparent; color: var(--text2); font-size: 13px; height: 36px; padding: 0 12px; }
-  .btn.ghost:hover { background: var(--bg2); color: var(--text); }
+  .btn.primary:active:not(:disabled) { background: var(--magenta-dn); }
+  .btn.ghost { border-color: rgba(213,28,87,0.72); color: var(--accent); font-size: 13px; height: 38px; padding: 0 14px; background: transparent; }
+  .btn.ghost:hover { background: rgba(213,28,87,0.10); color: #fff; }
 
   .err-msg { background: var(--err-bg); color: var(--err-text); border: 0.5px solid var(--err-bdr); border-radius: var(--radius); padding: 10px 14px; font-size: 13px; display: none; line-height: 1.5; }
 
   .not-found-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; text-align: center; gap: 14px; }
-  .not-found-wrap i { font-size: 44px; color: var(--err-text); }
-  .not-found-title { font-size: 20px; font-weight: 500; }
+  .not-found-wrap .material-symbols-rounded { font-size: 44px; color: var(--err-text); }
+  .not-found-title { font-size: 20px; font-weight: 700; }
   .not-found-sub { font-size: 13px; color: var(--text2); max-width: 300px; line-height: 1.6; }
 
   .list-inner { flex: 1; display: flex; flex-direction: column; padding: 20px; }
-  .list-heading { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+  .list-heading { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
   .list-sub { font-size: 13px; color: var(--text2); margin-bottom: 18px; }
   .customer-list { display: flex; flex-direction: column; gap: 8px; flex: 1; }
 
-  .c-card { display: flex; align-items: center; gap: 14px; padding: 13px 16px; border: 0.5px solid var(--border); border-radius: var(--radius-lg); cursor: pointer; background: var(--bg); transition: border-color 0.1s; }
-  .c-card:hover { border-color: var(--border2); }
-  .c-card.selected { border: 1.5px solid var(--accent); }
-  .c-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--info-bg); display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px; color: var(--info-text); flex-shrink: 0; }
-  .c-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-  .c-phone { display: inline-flex; align-items: center; gap: 5px; font-size: 17px; font-weight: 650; color: var(--text); letter-spacing: 0; line-height: 1.25; }
-  .c-phone i { color: var(--accent); font-size: 16px; flex-shrink: 0; }
+  .c-card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 0.5px solid var(--border); border-radius: var(--radius-lg); cursor: pointer; background: rgba(255,255,255,0.05); transition: border-color 0.1s, background 0.1s; }
+  .c-card:hover { border-color: var(--border2); background: rgba(255,255,255,0.075); }
+  .c-card.selected { border: 1.5px solid var(--accent); background: rgba(213,28,87,0.10); }
+  .c-avatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.10); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: var(--text); flex-shrink: 0; }
+  .c-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .c-phone { display: inline-flex; align-items: center; gap: 5px; font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: 0; line-height: 1.25; }
+  .c-phone .material-symbols-rounded { color: var(--accent); font-size: 16px; flex-shrink: 0; }
   .c-phone.missing { color: var(--text2); font-size: 14px; font-weight: 500; }
   .c-orders { text-align: right; flex-shrink: 0; }
-  .c-orders-num { font-size: 16px; font-weight: 500; }
+  .c-orders-num { font-size: 16px; font-weight: 700; }
   .c-orders-lbl { font-size: 11px; color: var(--text2); }
   .sel-dot { width: 20px; height: 20px; border-radius: 50%; border: 0.5px solid var(--border2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-left: 6px; transition: background 0.1s; }
   .c-card.selected .sel-dot { background: var(--accent); border-color: var(--accent); }
-  .sel-dot i { font-size: 11px; color: #fff; display: none; }
-  .c-card.selected .sel-dot i { display: block; }
+  .sel-dot .material-symbols-rounded { font-size: 13px; color: #fff; display: none; }
+  .c-card.selected .sel-dot .material-symbols-rounded { display: block; }
 
   .list-footer { padding-top: 14px; border-top: 0.5px solid var(--border); margin-top: 14px; display: flex; align-items: center; justify-content: space-between; }
 
   .loading-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; gap: 18px; }
   .spinner { width: 30px; height: 30px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.75s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-name { font-size: 16px; font-weight: 500; }
+  .loading-name { font-size: 16px; font-weight: 600; }
   .lsteps { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; width: 100%; max-width: 280px; }
   .lstep { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text3); }
   .lstep.active { color: var(--text); }
   .lstep.done { color: var(--ok-text); }
-  .lstep i { font-size: 15px; width: 16px; flex-shrink: 0; }
+  .lstep .material-symbols-rounded { font-size: 17px; width: 18px; flex-shrink: 0; }
 
   .summary-wrap { flex: 1; display: flex; flex-direction: column; }
   .s-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 18px; }
   .s-profile { min-width: 0; display: flex; align-items: center; gap: 14px; }
-  .s-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--info-bg); display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 15px; color: var(--info-text); flex-shrink: 0; }
-  .s-name { font-size: 18px; font-weight: 500; }
+  .s-avatar { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.10); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: var(--text); flex-shrink: 0; }
+  .s-name { font-size: 18px; font-weight: 700; }
   .s-meta { font-size: 12px; color: var(--text2); margin-top: 3px; overflow-wrap: anywhere; }
   .s-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
 
-  .badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; padding: 3px 9px; border-radius: 20px; }
-  .badge.green { background: var(--ok-bg); color: var(--ok-text); }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; border: 0.5px solid transparent; }
+  .badge.green { background: var(--ok-bg); color: var(--ok-text); border-color: var(--ok-bdr); }
   .badge.red { background: var(--err-bg); color: var(--err-text); }
   .badge.amber { background: var(--warn-bg); color: var(--warn-text); }
 
@@ -151,13 +140,13 @@
   .summary-columns { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
 
   .stats { display: grid; grid-template-columns: repeat(2, minmax(82px,1fr)); gap: 6px; width: min(100%, 256px); flex-shrink: 0; }
-  .stat { background: var(--bg2); border-radius: var(--radius); padding: 8px 10px; min-height: 54px; }
+  .stat { background: rgba(255,255,255,0.06); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 8px 10px; min-height: 54px; }
   .stat-lbl { font-size: 10px; color: var(--text2); margin-bottom: 3px; white-space: nowrap; }
-  .stat-val { font-size: 17px; font-weight: 500; line-height: 1.2; }
+  .stat-val { font-size: 17px; font-weight: 700; line-height: 1.2; }
 
-  .section { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
-  .sec-head { padding: 10px 16px; border-bottom: 0.5px solid var(--border); font-size: 12px; font-weight: 500; color: var(--text2); display: flex; align-items: center; gap: 7px; }
-  .sec-head i { font-size: 14px; }
+  .section { background: rgba(255,255,255,0.045); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .sec-head { padding: 11px 16px; border-bottom: 0.5px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text2); display: flex; align-items: center; gap: 7px; }
+  .sec-head .material-symbols-rounded { font-size: 16px; }
   .sec-body { padding: 4px 16px; }
 
   .row { display: flex; align-items: flex-start; justify-content: space-between; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; gap: 14px; }
@@ -165,20 +154,20 @@
   .row-left { min-width: 0; }
   .row-right { text-align: right; flex-shrink: 0; }
 
-  .ai-block { background: var(--info-bg); border: 0.5px solid var(--info-bdr); border-radius: var(--radius-lg); padding: 14px 16px; }
-  .ai-lbl { font-size: 11px; font-weight: 500; color: var(--info-text); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
-  .ai-lbl i { font-size: 13px; }
+  .ai-block { background: rgba(213,28,87,0.11); border: 0.5px solid rgba(213,28,87,0.36); border-radius: var(--radius-lg); padding: 14px 16px; }
+  .ai-lbl { font-size: 11px; font-weight: 700; color: #ffffff; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .ai-lbl .material-symbols-rounded { font-size: 15px; color: var(--accent); }
   .ai-text { font-size: 13px; font-style: italic; line-height: 1.65; color: var(--text); }
 
   .q-list { list-style: none; display: flex; flex-direction: column; gap: 7px; padding: 10px 16px; }
-  .q-item { display: flex; gap: 9px; font-size: 13px; line-height: 1.5; padding: 8px 11px; border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--bg2); }
-  .q-num { font-size: 11px; font-weight: 500; color: var(--accent); flex-shrink: 0; padding-top: 1px; }
+  .q-item { display: flex; gap: 9px; font-size: 13px; line-height: 1.5; padding: 8px 11px; border: 0.5px solid var(--border); border-radius: var(--radius); background: rgba(255,255,255,0.05); }
+  .q-num { font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; padding-top: 1px; }
 
   .rec-row { display: flex; gap: 11px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
   .rec-row:last-child { border-bottom: none; }
-  .rec-icon { width: 30px; height: 30px; border-radius: var(--radius); background: var(--bg2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .rec-icon i { font-size: 15px; color: var(--text2); }
-  .rec-title { font-weight: 500; margin-bottom: 2px; }
+  .rec-icon { width: 30px; height: 30px; border-radius: var(--radius); background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rec-icon .material-symbols-rounded { font-size: 16px; color: var(--text2); }
+  .rec-title { font-weight: 600; margin-bottom: 2px; }
   .rec-rat { font-size: 12px; color: var(--text2); }
 
   .complaint-block { background: var(--err-bg); border: 0.5px solid var(--err-bdr); border-radius: var(--radius); padding: 11px 13px; margin: 8px 0; }
@@ -190,6 +179,9 @@
   .audit { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); }
 
   @media (max-width: 480px) {
+    .topbar { padding: 15px 16px; }
+    .topbar-title { display: none; }
+    .step-pill { width: 18px; }
     .s-header { align-items: flex-start; flex-direction: column; }
     .stats { grid-template-columns: repeat(2, minmax(0,1fr)); width: 100%; }
     .summary-columns { grid-template-columns: 1fr; }
@@ -203,17 +195,17 @@
   <!-- Page 1: Search -->
   <div class="page active" id="p1">
     <div class="topbar">
-      <div class="topbar-brand"><div class="brand-dot"></div><span class="topbar-title">Customer cockpit</span></div>
+      <div class="topbar-brand"><div class="pa-wordmark">PEAK<span class="mark-a">A</span>CTIVITY</div><span class="topbar-title">Customer cockpit</span></div>
       <div class="step-pills"><div class="step-pill done"></div><div class="step-pill"></div><div class="step-pill"></div><div class="step-pill"></div></div>
     </div>
     <div class="center-wrap">
-      <i class="ti ti-user-search page-icon"></i>
+      <span class="material-symbols-rounded page-icon">person_search</span>
       <div class="page-heading">Find a customer</div>
       <div class="page-sub">Enter the customer's name to search Shopify and pull up their profile.</div>
       <div class="input-wrap">
         <input type="text" id="nameInput" placeholder="e.g. Emily Chen" autocomplete="off" />
         <div class="err-msg" id="p1err"></div>
-        <button class="btn primary" id="searchBtn" onclick="doSearch()"><i class="ti ti-search"></i> Search</button>
+        <button class="btn primary" id="searchBtn" onclick="doSearch()"><span class="material-symbols-rounded">search</span> Search</button>
       </div>
     </div>
   </div>
@@ -221,21 +213,21 @@
   <!-- Page 1b: Not found -->
   <div class="page" id="p1b">
     <div class="topbar">
-      <div class="topbar-brand"><div class="brand-dot"></div><span class="topbar-title">Customer cockpit</span></div>
+      <div class="topbar-brand"><div class="pa-wordmark">PEAK<span class="mark-a">A</span>CTIVITY</div><span class="topbar-title">Customer cockpit</span></div>
       <div class="step-pills"><div class="step-pill done"></div><div class="step-pill"></div><div class="step-pill"></div><div class="step-pill"></div></div>
     </div>
     <div class="not-found-wrap">
-      <i class="ti ti-user-x"></i>
+      <span class="material-symbols-rounded">person_off</span>
       <div class="not-found-title">Customer not found</div>
       <div class="not-found-sub" id="notFoundMsg">No customer with that name could be found in Shopify.</div>
-      <button class="btn primary" style="max-width:200px;margin-top:8px" onclick="resetAll()"><i class="ti ti-arrow-left"></i> Try again</button>
+      <button class="btn primary" style="max-width:200px;margin-top:8px" onclick="resetAll()"><span class="material-symbols-rounded">arrow_back</span> Try again</button>
     </div>
   </div>
 
   <!-- Page 2: Pick customer -->
   <div class="page" id="p2">
     <div class="topbar">
-      <div class="topbar-brand"><div class="brand-dot"></div><span class="topbar-title">Customer cockpit</span></div>
+      <div class="topbar-brand"><div class="pa-wordmark">PEAK<span class="mark-a">A</span>CTIVITY</div><span class="topbar-title">Customer cockpit</span></div>
       <div class="step-pills"><div class="step-pill done"></div><div class="step-pill done"></div><div class="step-pill"></div><div class="step-pill"></div></div>
     </div>
     <div class="list-inner">
@@ -243,8 +235,8 @@
       <div class="list-sub">Confirm the correct customer with them before continuing.</div>
       <div class="customer-list" id="customerList"></div>
       <div class="list-footer">
-        <button class="btn ghost" onclick="resetAll()"><i class="ti ti-arrow-left"></i> Back</button>
-        <button class="btn primary" style="width:auto;max-width:160px" id="confirmBtn" onclick="doConfirm()" disabled><i class="ti ti-check"></i> Confirm</button>
+        <button class="btn ghost" onclick="resetAll()"><span class="material-symbols-rounded">arrow_back</span> Back</button>
+        <button class="btn primary" style="width:auto;max-width:160px" id="confirmBtn" onclick="doConfirm()" disabled><span class="material-symbols-rounded">check</span> Confirm</button>
       </div>
     </div>
   </div>
@@ -252,17 +244,17 @@
   <!-- Page 3: Loading -->
   <div class="page" id="p3">
     <div class="topbar">
-      <div class="topbar-brand"><div class="brand-dot"></div><span class="topbar-title">Customer cockpit</span></div>
+      <div class="topbar-brand"><div class="pa-wordmark">PEAK<span class="mark-a">A</span>CTIVITY</div><span class="topbar-title">Customer cockpit</span></div>
       <div class="step-pills"><div class="step-pill done"></div><div class="step-pill done"></div><div class="step-pill done"></div><div class="step-pill"></div></div>
     </div>
     <div class="loading-center">
       <div class="spinner"></div>
       <div class="loading-name" id="loadingName">Generating summary…</div>
       <div class="lsteps">
-        <div class="lstep" id="ls0"><i class="ti ti-package"></i> Fetching order history</div>
-        <div class="lstep" id="ls1"><i class="ti ti-alert-triangle"></i> Checking complaints</div>
-        <div class="lstep" id="ls2"><i class="ti ti-shield-check"></i> Loading active services</div>
-        <div class="lstep" id="ls3"><i class="ti ti-sparkles"></i> Generating AI insights</div>
+        <div class="lstep" id="ls0"><span class="material-symbols-rounded">inventory_2</span> Fetching order history</div>
+        <div class="lstep" id="ls1"><span class="material-symbols-rounded">warning</span> Checking complaints</div>
+        <div class="lstep" id="ls2"><span class="material-symbols-rounded">verified_user</span> Loading active services</div>
+        <div class="lstep" id="ls3"><span class="material-symbols-rounded">auto_awesome</span> Generating AI insights</div>
       </div>
     </div>
   </div>
@@ -270,15 +262,15 @@
   <!-- Page 4: Summary -->
   <div class="page" id="p4">
     <div class="topbar">
-      <div class="topbar-brand"><div class="brand-dot"></div><span class="topbar-title">Customer cockpit</span></div>
+      <div class="topbar-brand"><div class="pa-wordmark">PEAK<span class="mark-a">A</span>CTIVITY</div><span class="topbar-title">Customer cockpit</span></div>
       <div class="step-pills"><div class="step-pill done"></div><div class="step-pill done"></div><div class="step-pill done"></div><div class="step-pill done"></div></div>
     </div>
     <div class="summary-wrap">
       <div class="s-header" id="sHeader"></div>
       <div class="s-body" id="sBody"></div>
       <div class="s-footer">
-        <div class="audit"><i class="ti ti-lock" style="font-size:12px"></i><span id="auditId">Lookup recorded</span></div>
-        <button class="btn ghost" onclick="resetAll()"><i class="ti ti-refresh"></i> New search</button>
+        <div class="audit"><span class="material-symbols-rounded" style="font-size:13px">lock</span><span id="auditId">Lookup recorded</span></div>
+        <button class="btn ghost" onclick="resetAll()"><span class="material-symbols-rounded">refresh</span> New search</button>
       </div>
     </div>
   </div>
@@ -304,6 +296,7 @@ function fmt(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('e
 function money(v) { return '$' + parseFloat(v||0).toFixed(2); }
 function showErr(msg) { const e = document.getElementById('p1err'); e.textContent = msg; e.style.display = 'block'; }
 function clearErr() { document.getElementById('p1err').style.display = 'none'; }
+function icon(name, size) { return `<span class="material-symbols-rounded"${size ? ` style="font-size:${size}px"` : ''}>${name}</span>`; }
 function unwrapWorkflow(raw) {
   return raw?.output?.data ?? raw?.output?.output?.data ?? raw?.data ?? raw;
 }
@@ -367,7 +360,7 @@ async function doSearch() {
     showErr('Network error — could not reach the API: ' + e.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-search"></i> Search';
+    btn.innerHTML = icon('search') + ' Search';
   }
 }
 
@@ -395,13 +388,13 @@ function renderCandidates(candidates) {
       <div class="c-avatar">${initials(c.name)}</div>
       <div style="flex:1;min-width:0">
         <div class="c-name">${c.name}</div>
-        <div class="c-phone${c.phone === '—' ? ' missing' : ''}"><i class="ti ti-phone"></i>${c.phone}</div>
+        <div class="c-phone${c.phone === '—' ? ' missing' : ''}">${icon('phone', 16)}${c.phone}</div>
       </div>
       <div class="c-orders">
         <div class="c-orders-num">${c.orders_count}</div>
         <div class="c-orders-lbl">orders</div>
       </div>
-      <div class="sel-dot"><i class="ti ti-check"></i></div>
+      <div class="sel-dot">${icon('check', 13)}</div>
     </div>`).join('');
 }
 
@@ -452,11 +445,11 @@ async function poll(execId, n) {
 
 function startLoading(name) {
   document.getElementById('loadingName').textContent = 'Loading ' + name + '…';
-  const icons = ['ti-package','ti-alert-triangle','ti-shield-check','ti-sparkles'];
-  [0,1,2,3].forEach(i => { const el = document.getElementById('ls'+i); el.className='lstep'; el.querySelector('i').className='ti '+icons[i]; });
+  const icons = ['inventory_2','warning','verified_user','auto_awesome'];
+  [0,1,2,3].forEach(i => { const el = document.getElementById('ls'+i); el.className='lstep'; el.querySelector('.material-symbols-rounded').textContent = icons[i]; });
   [0,1,2,3].forEach(i => {
     setTimeout(() => {
-      if (i > 0) { const p = document.getElementById('ls'+(i-1)); p.classList.remove('active'); p.classList.add('done'); p.querySelector('i').className='ti ti-circle-check'; }
+      if (i > 0) { const p = document.getElementById('ls'+(i-1)); p.classList.remove('active'); p.classList.add('done'); p.querySelector('.material-symbols-rounded').textContent='check_circle'; }
       document.getElementById('ls'+i).classList.add('active');
     }, i * 900);
   });
@@ -479,9 +472,9 @@ function renderSummary(d) {
         <div class="s-name">${c.name || '—'}</div>
         <div class="s-meta">${c.email || '—'} · ${c.phone || '—'}</div>
         <div class="s-badges">
-          <span class="badge green"><i class="ti ti-circle-check" style="font-size:10px"></i> Found</span>
-          ${complaints.length ? `<span class="badge red"><i class="ti ti-alert-triangle" style="font-size:10px"></i> Open complaint</span>` : ''}
-          ${services.length   ? `<span class="badge amber"><i class="ti ti-shield" style="font-size:10px"></i> ${services.length} active service</span>` : ''}
+          <span class="badge green">${icon('check_circle', 12)} Found</span>
+          ${complaints.length ? `<span class="badge red">${icon('warning', 12)} Open complaint</span>` : ''}
+          ${services.length   ? `<span class="badge amber">${icon('verified_user', 12)} ${services.length} active service</span>` : ''}
         </div>
       </div>
     </div>
@@ -495,38 +488,38 @@ function renderSummary(d) {
   document.getElementById('auditId').textContent = 'Lookup recorded · lk_' + Math.random().toString(36).slice(2,12);
 
   document.getElementById('sBody').innerHTML = `
-    <div class="ai-block"><div class="ai-lbl"><i class="ti ti-sparkles"></i> Sales angle · Sandler method</div><div class="ai-text">"${d.salesAngle || 'No sales angle returned.'}"</div></div>
+    <div class="ai-block"><div class="ai-lbl">${icon('auto_awesome', 15)} Sales angle · Sandler method</div><div class="ai-text">"${d.salesAngle || 'No sales angle returned.'}"</div></div>
 
     <div class="summary-columns">
-      <div class="section"><div class="sec-head"><i class="ti ti-message-circle"></i> Suggested questions</div>
+      <div class="section"><div class="sec-head">${icon('chat_bubble', 16)} Suggested questions</div>
         ${sq.length ? `<ul class="q-list">${sq.map((q,i) => `<li class="q-item"><span class="q-num">${i+1}</span><span>${q}</span></li>`).join('')}</ul>` : '<div class="sec-body"><div class="row"><div class="row-left">No suggested questions returned.</div></div></div>'}</div>
 
-      <div class="section"><div class="sec-head"><i class="ti ti-shopping-bag"></i> Product recommendations</div>
-        <div class="sec-body">${recs.length ? recs.map(r => `<div class="rec-row"><div class="rec-icon"><i class="ti ti-tag"></i></div><div><div class="rec-title">${r.title || 'Product'}</div><div class="rec-rat">${r.rationale || ''}</div></div></div>`).join('') : '<div class="row"><div class="row-left">No product recommendations returned.</div></div>'}</div></div>
+      <div class="section"><div class="sec-head">${icon('shopping_bag', 16)} Product recommendations</div>
+        <div class="sec-body">${recs.length ? recs.map(r => `<div class="rec-row"><div class="rec-icon">${icon('sell', 16)}</div><div><div class="rec-title">${r.title || 'Product'}</div><div class="rec-rat">${r.rationale || ''}</div></div></div>`).join('') : '<div class="row"><div class="row-left">No product recommendations returned.</div></div>'}</div></div>
     </div>
 
-    ${orders.length ? `<div class="section"><div class="sec-head"><i class="ti ti-package"></i> Order history · ${orders.length} orders · ${money(d.orderTotal)} total</div>
+    ${orders.length ? `<div class="section"><div class="sec-head">${icon('inventory_2', 16)} Order history · ${orders.length} orders · ${money(d.orderTotal)} total</div>
       <div class="sec-body">${orders.map(o => `<div class="row">
         <div class="row-left">
-          <div style="font-weight:500;color:var(--accent);font-size:13px">${o.number}</div>
+          <div style="font-weight:700;color:var(--accent);font-size:13px">${o.number}</div>
           <div style="font-size:12px;color:var(--text2)">${(o.items||[]).map(i => i.quantity+'× '+i.title).join(', ')}</div>
         </div>
         <div class="row-right">
-          <div style="font-weight:500;font-size:13px">${money(o.total)}</div>
+          <div style="font-weight:700;font-size:13px">${money(o.total)}</div>
           <div style="font-size:11px;color:var(--text2)">${fmt(o.processed_at)} · <span style="color:${o.fulfillment_status==='fulfilled'?'var(--ok-text)':'var(--warn-text)'}">${o.fulfillment_status||'unfulfilled'}</span></div>
         </div>
       </div>`).join('')}</div></div>` : ''}
 
-    ${complaints.length ? `<div class="section"><div class="sec-head" style="color:var(--err-text)"><i class="ti ti-alert-triangle"></i> Open complaints</div>
+    ${complaints.length ? `<div class="section"><div class="sec-head" style="color:var(--err-text)">${icon('warning', 16)} Open complaints</div>
       <div style="padding:0 16px">${complaints.map(co => `<div class="complaint-block">
         <div class="complaint-head"><span class="badge red">${co.status||'open'}</span><span style="font-size:12px;color:var(--text2)">${co.category||'general'}</span></div>
         <div class="complaint-text">${co.complaint_text||''}</div>
         <div class="complaint-meta">Logged ${fmt(co.logged_at)} by ${co.logged_by||'—'}</div>
       </div>`).join('')}</div></div>` : ''}
 
-    ${services.length ? `<div class="section"><div class="sec-head"><i class="ti ti-shield-check"></i> Active services</div>
+    ${services.length ? `<div class="section"><div class="sec-head">${icon('verified_user', 16)} Active services</div>
       <div class="sec-body">${services.map(s => `<div class="row">
-        <div class="row-left"><div style="font-weight:500;font-size:13px">${s.service_type||'Service'}</div><div style="font-size:12px;color:var(--text2)">${s.notes||''}</div></div>
+        <div class="row-left"><div style="font-weight:600;font-size:13px">${s.service_type||'Service'}</div><div style="font-size:12px;color:var(--text2)">${s.notes||''}</div></div>
         <div class="row-right"><span class="badge green">${s.status||'active'}</span><div style="font-size:11px;color:var(--text2);margin-top:3px">Exp. ${fmt(s.expires_at)}</div></div>
       </div>`).join('')}</div></div>` : ''}`;
 
